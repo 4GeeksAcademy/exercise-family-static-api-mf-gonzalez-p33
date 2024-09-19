@@ -30,13 +30,10 @@ def sitemap():
 @app.route('/members', methods=['GET'])
 def get_members():
     members = jackson_family.get_all_members()
-    response_body = {
-        "hello": "world",
-        "family": members
-    }
-    return jsonify(response_body), 200
+    return jsonify(members), 200
 
-@app.route('/add_members', methods=['POST'])
+
+@app.route('/member', methods=['POST'])
 def new_member():
     body = request.json
     if body.get("first_name", False) == False:
@@ -57,7 +54,11 @@ def delete_member(member_id):
     delete = jackson_family.delete_member(member_id)
     if delete == None:
         return "Member not found", 404
-    return delete, 200
+    return jsonify(
+        {
+            "done": True
+        }
+    ), 200
 
 @app.route('/member/<int:member_id>', methods=['GET'])
 def get_one_member(member_id):
@@ -65,7 +66,8 @@ def get_one_member(member_id):
     search_member = jackson_family.get_member(member_id)
 
     if search_member == None:
-        return "Member not found",404
+        return "Member not found",
+    
     return search_member, 200
 
 
